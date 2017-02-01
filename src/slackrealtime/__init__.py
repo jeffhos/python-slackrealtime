@@ -24,16 +24,15 @@ from .session import request_session
 def connect(token, protocol=RtmProtocol, factory=WebSocketClientFactory, factory_kwargs=None, api_url=None, debug=False):
 	"""
 	Creates a new connection to the Slack Real-Time API.
-	
+
 	Returns (connection) which represents this connection to the API server.
-	
+
 	"""
 	if factory_kwargs is None:
 		factory_kwargs = dict()
 
 	metadata = request_session(token, api_url)
-	wsfactory = factory(metadata.url, debug=debug, **factory_kwargs)
+	wsfactory = factory(metadata.url, **factory_kwargs)
 	wsfactory.protocol = lambda *a,**k: protocol(*a,**k)._seedMetadata(metadata)
 	connection = connectWS(wsfactory)
 	return connection
-
